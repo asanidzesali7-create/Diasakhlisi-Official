@@ -1,0 +1,568 @@
+/* -----------------------------------------------------------
+   1. GLOBAL STYLES & RESET
+----------------------------------------------------------- */
+:root {
+    /* Main Color Palette (From your references) */
+    --color-bg: #F5F1E6;       /* Warm Cream */
+    --color-panel: #EAE3D0;    /* Light Beige */
+    --color-text: #4A3A2C;     /* Dark Brown */
+    --color-accent: #B37D56;   /* Medium Brown for Buttons */
+    --color-border: #DCD2C0;
+    --color-chat-out: #D6CAB8; /* Outgoing Chat Bubble */
+    
+    /* Typography */
+    --font-heading: 'Crimson Pro', serif;
+    --font-body: 'Public Sans', sans-serif;
+    
+    /* Spacing & Borders */
+    --radius-panel: 20px;
+    --spacing-xs: 8px;
+    --spacing-sm: 15px;
+    --spacing-md: 25px;
+    --spacing-lg: 40px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-body);
+    line-height: 1.6;
+    overflow-x: hidden;
+    padding-bottom: 70px; /* Space for bottom nav */
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-sm);
+}
+
+/* -----------------------------------------------------------
+   2. REUSABLE UI ELEMENTS
+----------------------------------------------------------- */
+.crimson-text {
+    font-family: var(--font-heading);
+    color: var(--color-text);
+    font-size: 1.1rem;
+}
+
+.icon-btn {
+    background: none;
+    border: none;
+    color: var(--color-text);
+    font-size: 1.3rem;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.icon-btn:hover {
+    opacity: 1;
+}
+
+.main-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.mini-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid white;
+}
+
+/* Standardized App Panels (The card look) */
+.app-panel {
+    background-color: var(--color-panel);
+    border-radius: var(--radius-panel);
+    border: 1px solid var(--color-border);
+    margin-bottom: var(--spacing-sm);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    overflow: hidden;
+}
+
+.panel-header {
+    display: flex;
+    align-items: center;
+    padding: var(--spacing-sm);
+    gap: var(--spacing-sm);
+}
+
+.panel-header h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.panel-header h3 {
+    font-size: 1.3rem;
+    color: var(--color-text);
+    flex-grow: 1;
+}
+
+/* Input Fields */
+input[type="text"] {
+    width: 100%;
+    padding: var(--spacing-sm) var(--spacing-sm) var(--spacing-sm) 45px;
+    border: none;
+    border-radius: 25px;
+    background-color: #EDE8DB;
+    font-size: 1rem;
+    color: var(--color-text);
+}
+
+input[type="text"]:focus {
+    outline: 2px solid var(--color-accent);
+}
+
+/* Main Action Buttons (Like the Post and View buttons) */
+.post-btn, .messages-btn {
+    display: block;
+    width: 90%;
+    margin: var(--spacing-sm) auto;
+    padding: var(--spacing-sm) 0;
+    background-color: var(--color-accent);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-size: 1.1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.post-btn:hover, .messages-btn:hover {
+    background-color: #a06a45;
+}
+
+/* -----------------------------------------------------------
+   3. HEADER & BOTTOM NAV
+----------------------------------------------------------- */
+.site-header {
+    background-color: rgba(245, 241, 230, 0.9);
+    padding: var(--spacing-sm) 0;
+    border-bottom: 1px solid var(--color-border);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.site-header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-family: var(--font-heading);
+    color: var(--color-text);
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+
+.main-nav ul {
+    list-style: none;
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+.main-nav a {
+    text-decoration: none;
+    color: var(--color-text);
+    font-size: 1rem;
+    opacity: 0.8;
+}
+
+.main-nav a.active {
+    opacity: 1;
+    font-weight: 500;
+}
+
+/* Mobile bottom nav */
+.bottom-nav {
+    display: none; /* Hidden on desktop */
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: var(--color-panel);
+    border-top: 1px solid var(--color-border);
+    padding: var(--spacing-sm) 0;
+    z-index: 999;
+}
+
+.bottom-nav ul {
+    display: flex;
+    justify-content: space-around;
+    list-style: none;
+}
+
+.bottom-nav i {
+    color: var(--color-text);
+    font-size: 1.5rem;
+}
+
+/* -----------------------------------------------------------
+   4. MAIN PAGE LAYOUT
+----------------------------------------------------------- */
+.page-layout {
+    display: grid;
+    grid-template-columns: 2.2fr 1.3fr;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md) 0 var(--spacing-lg) 0;
+}
+
+.feed-column, .sidebar-column {
+    display: flex;
+    flex-direction: column;
+}
+
+/* -----------------------------------------------------------
+   5. SPECIFIC PANEL STYLES
+----------------------------------------------------------- */
+
+/* Search Panel */
+.search-panel {
+    padding: var(--spacing-sm);
+}
+
+.search-input-wrapper {
+    position: relative;
+}
+
+.search-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-text);
+    opacity: 0.6;
+}
+
+/* Create Idea Panel */
+.create-idea-panel {
+    text-align: center;
+}
+
+.idea-upload-mock {
+    padding: var(--spacing-sm);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.idea-upload-mock img {
+    max-width: 90%;
+    border-radius: 10px;
+    background-color: #F2EDD5; /* Darker beige for placeholder */
+}
+
+.idea-text {
+    position: relative;
+    padding-bottom: 20px;
+}
+
+.idea-text i.drop-icon {
+    color: #C1AA8A;
+    font-size: 2.5rem;
+    position: absolute;
+    bottom: -10px;
+    right: 30px;
+}
+
+/* Post/Idea Card */
+.post-card .card-img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.card-footer {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    padding: var(--spacing-sm);
+    align-items: center;
+}
+
+.post-info h4 {
+    font-weight: 600;
+}
+
+.post-info .author {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.post-stats {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.post-stats .views {
+    font-weight: 600;
+}
+
+.post-stats .likes {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+/* Discover/Profile Panel and Detailed View */
+.discover-panel {
+    position: relative;
+}
+
+.profile-cards-container {
+    padding: var(--spacing-sm);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+/* Mini Profile Card (from JS data) */
+.profile-card {
+    display: flex;
+    align-items: flex-start;
+    padding: var(--spacing-xs);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.1s;
+}
+
+.profile-card:hover {
+    background-color: var(--color-bg);
+}
+
+.profile-card-content {
+    margin-left: 10px;
+    flex-grow: 1;
+}
+
+.profile-card-content h3 {
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.profile-card-content .location {
+    font-size: 0.8rem;
+    opacity: 0.7;
+    margin-bottom: 4px;
+}
+
+.profile-card-content ul {
+    list-style: none;
+    font-size: 0.9rem;
+}
+
+.profile-card-content li {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 2px;
+}
+
+/* Detailed Profile View overlay */
+.detail-profile-card {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--color-panel);
+    z-index: 10;
+    transform: translateX(100%); /* Start hidden off-screen */
+    transition: transform 0.3s ease-out;
+    display: flex;
+    flex-direction: column;
+}
+
+.detail-profile-card.active {
+    transform: translateX(0); /* Slide into view */
+}
+
+.detail-header {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    padding: var(--spacing-sm);
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.detail-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: var(--spacing-sm);
+    text-align: center;
+    flex-grow: 1;
+}
+
+.main-details {
+    margin: var(--spacing-sm) 0;
+}
+
+.main-details h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.main-details .bio {
+    font-size: 0.9rem;
+    opacity: 0.7;
+}
+
+.user-ideas-section, .user-messages-section {
+    width: 100%;
+    margin-top: var(--spacing-md);
+    text-align: left;
+}
+
+.user-ideas-section h4 {
+    margin-bottom: var(--spacing-sm);
+}
+
+.idea-thumbnails {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-sm);
+}
+
+.thumb-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 0.8rem;
+    gap: 5px;
+}
+
+.thumb-item img {
+    max-width: 90px;
+    height: auto;
+    border-radius: 10px;
+    background-color: #EDE8DB;
+}
+
+/* Chat Panel */
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.user-strip {
+    display: flex;
+    align-items: center;
+    padding: var(--spacing-sm);
+    background-color: #EDE8DB;
+}
+
+.chat-user-info {
+    margin-left: 10px;
+}
+
+.chat-tag {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.messages-stream {
+    flex-grow: 1;
+    padding: var(--spacing-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.bubble {
+    max-width: 80%;
+    padding: var(--spacing-sm);
+    border-radius: 15px;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.bubble.incoming {
+    align-self: flex-start;
+    background-color: white;
+}
+
+.bubble.outgoing {
+    align-self: flex-end;
+    background-color: var(--color-chat-out);
+}
+
+/* -----------------------------------------------------------
+   6. SITE FOOTER (ABOUT)
+----------------------------------------------------------- */
+.site-info {
+    background-color: var(--color-panel);
+    border-top: 1px solid var(--color-border);
+    padding: var(--spacing-lg) 0;
+    margin-top: auto;
+}
+
+.site-info h2, .site-info h3 {
+    margin-bottom: var(--spacing-sm);
+}
+
+.site-info h3 {
+    margin-top: var(--spacing-md);
+}
+
+.site-info p {
+    color: var(--color-text);
+    margin-bottom: var(--spacing-sm);
+}
+
+/* -----------------------------------------------------------
+   7. RESPONSIVE DESIGN
+----------------------------------------------------------- */
+
+/* Tablets and larger mobiles */
+@media (max-width: 992px) {
+    .page-layout {
+        grid-template-columns: 1fr; /* Switch to single column */
+    }
+}
+
+/* Small Mobiles */
+@media (max-width: 600px) {
+    :root {
+        --spacing-md: 15px; /* Shrink md spacing */
+        --radius-panel: 15px;
+    }
+    
+    .site-header {
+        display: none; /* Hide top nav for true 'app feel' on mobile */
+    }
+    
+    .bottom-nav {
+        display: block; /* Show bottom nav on mobile */
+    }
+    
+    .container {
+        padding: 0 var(--spacing-xs);
+    }
+    
+    .post-card .card-img {
+        height: 150px;
+    }
+    
+    .bubble {
+        max-width: 95%; /* Messages are wider on narrow screens */
+    }
+}
